@@ -1,0 +1,18 @@
+..............................................................................
+
+
+In all seriousness though, I appreciate the effort that y'all have put in to 
+adapt to the sudden changes. I understand it mustn't be easy to manage so 
+many changes to the curriculum all at once. For the most part, I think you've
+all shown that you care about our wellbeing. 
+
+That being said, I think the team could be more decisive. I'm referring to 
+the removal of support for external libraries. There were good reasons to 
+make that call. But it would have been greatly appreciated if it were made 
+earlier. (That being said, if you're interested in a "space invaders" type 
+game controlled by body movements via camera ala kinect, check out my github. 
+Extra credit appreciated.) 
+
+Regards, 
+Joel Ong
+https://github.com/ongkahyuan

@@ -1,0 +1,32 @@
+                                                                                
+                                                                                
+     @@@   @@   @@@         %@@/                                                
+     @@@  @@@%  @@/         %@@/                                                
+      @@, @@@@ @@@  @@@@@   %@@/   @@@@@    &@@@@    @@@#@@@ %@@@    @@@@@      
+      @@@*@@@@ @@@ @@@ @@@  %@@/  @@@ .@@@ @@@ (@@#  @@@ @@@@ @@@@  @@@ @@@     
+      @@@@@  @@@@& @@@@@@@. %@@/  @@@      @@@ .@@%  @@@  @@@ .@@@  @@@@@@@.    
+       @@@@  @@@@  @@%      %@@/  @@@      @@@ .@@%  @@@  @@@ .@@@  @@@         
+       @@@,  &@@@  @@@@@@@   @@@@ @@@@@@@( @@@@@@@   @@@  @@@ .@@@  @@@@@@@     
+                                                                                
+                                                                                
+	CodeMaster//
+		 //Joel Ong
+
+Welcome to Code Master! The aim of this game to is become the best coder - and 
+we all know that more is better - so that means writing the most lines of code.
+
+At its core, the game is simple: enter "a" to code a line. That will add one 
+line to your wealth expertise. But there's more to it. There are two modifiers 
+to this game. The first are libraries, the second are projects.
+
+As in real life, the code libraries here do the heavy lifting. They increase the 
+lines of code you produce per second. They'll require a bit of an investment 
+though, and that comes in the lines of code you’ll slave away trying to figure 
+them out. Visit the library to purchase them from your friendly librarian!
+
+Projects on the other hand, demand much more. But they also pay for your effort. 
+These are a late game item - check the store out once you build up your lines!
+
+That's it for now, and enjoy!
+...........................................................................................
+
