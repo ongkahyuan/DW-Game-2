@@ -74,7 +74,7 @@ class shop():
         print("Y/N, or A to repeat purchase\n\n>>",end='')
         answer = input().lower()
         if answer == "n":
-            self.state = 'home'
+            self.state = 'leave'
         elif answer == 'y':
             self.state = 'shop'
         elif answer == 'a':
@@ -121,7 +121,6 @@ class shop():
     
     def shop_prompt(self):
         self.display_inventory()
-        # print(self.state)
         print("We have the following items: ")
         for ind, (item, price) in enumerate(self.for_sale_lib.items()):
             print("{} : {} lines, {} lines/sec".format(item, price, self.lib_multiplier_dict[item]*10))
@@ -132,10 +131,10 @@ class shop():
         print("\nWhat would you like?")
         print("<type item name> / Leave\n\n>>",end='')
         answer =  input().lower()
-        if answer in self.for_sale_lib or item.lower() in self.for_sale_pro:
+        if answer in self.for_sale_lib or answer in self.for_sale_pro:
             self.purchase(answer)
         elif answer == "leave":
-            self.state = 'home'
+            self.state = 'leave'
         else:
             self.invalid = True
 
@@ -205,7 +204,7 @@ class shop():
                 print("  - {}: {}".format(project, number))
         else:
             print("  - None\n")
-        print("Lines: {} \n................................\n".format(round(self.lines)))
+        print("\nLines: {} \n................................\n".format(round(self.lines)))
 
 class library_shop(shop):
     def __init__(self):

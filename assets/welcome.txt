@@ -16,8 +16,8 @@ Welcome to Code Master! The aim of this game to is become the best coder - and
 we all know that more is better - so that means writing the most lines of code.
 
 At its core, the game is simple: enter "a" to code a line. That will add one 
-line to your wealth expertise. But there's more to it. There are two modifiers 
-to this game. The first are libraries, the second are projects.
+line to your wealth of expertise. But there's more to it. There are two 
+modifiers to this game. The first are libraries, the second are projects.
 
 As in real life, the code libraries here do the heavy lifting. They increase the 
 lines of code you produce per second. They'll require a bit of an investment 
