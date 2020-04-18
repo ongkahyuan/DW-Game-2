@@ -1,9 +1,38 @@
 import time
 import threading
-from shops import clear
+from assets.shops import clear
        
 class inventory(threading.Thread):
+    """
+    Class that manages the player inventory. Keeps track of lines and bought items. 
+    
+    Methods
+    ====
+    - __init__(tick_time)
+    Inits the object. tick_time sets the game speed and refresh rate in seconds. Default is 0.1s (10Hz)
+    - .add_line() 
+    Adds a line
+    - .start()
+    Starts a new thread, adds lines according to the rate of production
+    - .pause()
+    Pauses the production of lines
+    - .stop()
+    Ends the thread, stopping production. Only on exit. 
+    - .monitor()
+    Enables the continuous printing of the current number of lines to the console. Only when in monitor mode
+    - .stop_monitor()
+    Stops monitoring
+    - .set_multiplier()
+    Sets the correct rate of line production according to items in inventory
+    
+    Attributes
+    ====
+     
+    """
     def __init__(self, tick_time = 0.1):
+        """
+        Inits the object. tick_time sets the game speed and refresh rate in seconds. Default is 0.1s (10Hz) 
+        """
         threading.Thread.__init__(self)
         self.libraries = {}
         self.projects = {}
@@ -39,6 +68,9 @@ class inventory(threading.Thread):
         self.verbose = False
         
     def set_multiplier(self):
+        """"
+        
+        """
         self.multiplier = 0
         if not self.paused:
             for library, number in self.libraries.items():

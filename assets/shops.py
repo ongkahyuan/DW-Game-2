@@ -3,15 +3,45 @@ import os
 import time
 
 def clear(): 
+    """"To clear the terminal"""
     if os.name == 'nt': 
         os.system('cls') 
     else: 
         os.system('clear')
 
-
-
-
 class shop():
+    """
+    Generic shop class. Works as a state machine, with main "loop" being .display() (which is actually called recursively)
+    Yes, I realise I could have made a base class for both main and shop objects because of the repeated functions. 
+    Yes, I could have unified the state machine methods, with both either using this recursive method or the state machine class.
+    No, I didn't think it was worth the effort for a project of this scale. 
+    Yes, I only realised too late that I hadn't implemented sm.SM and did it last minute in main.py 
+    
+    Methods
+    ====
+    -.load_image(state)
+    Loads ASCII images associated with a given gamestate into memory. Saves them in attribute self.image
+    -.print_ASCII()
+    Prints loaded images to terminal    
+    -.init_prompt()
+    Displays the initial shop prompt
+    -.update_with_inventory(lines, libraries, projects, rate)
+    Takes inventory from the main loop and stores it as attributes in the object
+    -.update_inventory()
+    Returns the update inventory to the main loop
+    -.next_purchase()
+    Display next purchase prompt
+    -.purchase()
+    Display purchase prompt
+    -.shop_prompt()
+    Display the shopping screen
+    -.leave_prompt()
+    Asks if you want to leave, gives a summary of items purchased, and guilt trips where necessary
+    -.display()
+    Main shop loop. Functions as the state machine of sorts.
+    -.display_inventory()
+    Displays player inventory
+    """
     def __init__(self):
         self.image_paths = {'home':'assets/default.txt'}
         self.image = []
@@ -23,27 +53,20 @@ class shop():
         self.libraries = {}
         self.lines = 0
         self.projects = {}
-        self.insufficient = False
-        self.invalid = False
-        self.display_inv = False
-        self.lib_multiplier_dict = {}
+        self.insufficient = False #set to true when there are insufficient funds
+        self.invalid = False #set to true when invalid response is given
+        self.lib_multiplier_dict = {} #stores the multiplier amounts for objects for sale
         self.pro_multiplier_dict = {}
     
-    def load_image(self, action):
-        self.image = []
+    def load_image(self, state):
+        self.image = [] #self image is empty, just like me
         try:
-            f = open(self.image_paths[action],'r')
+            f = open(self.image_paths[state],'r')
             for line in f:
                 self.image.append(line)
             f.close()
         except:
             pass
-    
-    def clear(self): 
-        if os.name == 'nt': 
-            os.system('cls') 
-        else: 
-            os.system('clear')
     
     def print_ASCII(self):
         for line in self.image: 
@@ -88,7 +111,7 @@ class shop():
             price = self.for_sale_lib[item]
             if price <= self.lines:
                 self.lines -= price
-                self.clear()
+                clear()
                 try:
                     self.libraries[item.lower()] += 1
                 except:
@@ -98,12 +121,11 @@ class shop():
                 self.next_purchase(item)
             elif price > self.lines:
                 self.insufficient = True
-                # self.display(insufficient = True)
         elif item.lower() in self.for_sale_pro:
             price = self.for_sale_pro[item]
             if price <= self.lines:
                 self.lines -= price
-                self.clear()
+                clear()
                 try:
                     self.projects[item.lower()] += 1
                 except:
@@ -113,10 +135,8 @@ class shop():
                 self.next_purchase(item)
             elif price > self.lines:
                 self.insufficient = True
-                # self.display(insufficient = True)
         else:
             self.invalid = True
-            # self.display(invalid=True)
         
     
     def shop_prompt(self):
@@ -124,9 +144,7 @@ class shop():
         print("We have the following items: ")
         for ind, (item, price) in enumerate(self.for_sale_lib.items()):
             print("{} : {} lines, {} lines/sec".format(item, price, self.lib_multiplier_dict[item]*10))
-            # print(str(item) + ': ' + str(price) + " lines")
         for ind, (item, price) in enumerate(self.for_sale_pro.items()):
-            # print(str(item) + ': ' + str(price) + " lines" )
             print("{} : {} lines, {} lines/sec".format(item, price, self.pro_multiplier_dict[item]*10))
         print("\nWhat would you like?")
         print("<type item name> / Leave\n\n>>",end='')
@@ -142,10 +160,12 @@ class shop():
     def leave_prompt(self):
         self.illegal_items = ['opencv', 'python']
         self.wasted = ['dw1d', 'pygame game']
+        #check is any items are bought
         if len(self.items_bought) > 0:
             print("You have purchased: ")
             for index, item in enumerate(self.items_bought):
                 print(str(index+1) + '. ' + str(item))
+            #checks for hypocrisy
             if any(item in self.items_bought for item in self.illegal_items):
                 print("\nOh, you're using external libraries? After you told us not to? Hmmmmm...\n")
                 print("Type <do as i say and not as i do> to continue:\n\n>>",end='')
@@ -153,6 +173,7 @@ class shop():
                     self.display()
                 else:
                     pass
+            #checks for undermining of efforts
             elif any(item in self.items_bought for item in self.wasted):
                 print("\nAhh investing time in DW projects? Would be a shame if those projects were cancelled...\n")
                 print("Type <based on a true story> to continue:\n\n>>",end = '')
@@ -163,18 +184,21 @@ class shop():
             else:
                 print("Press enter to return:\n\n>>", end= '')
                 input()
+        #clear list of items bought
         self.items_bought = []
         self.state = 'home'
         return None
 
     
-    def display(self, invalid = False, insufficient = False):
-        self.clear()
+    def display(self):
+        clear()
         self.load_image(self.state)
         self.print_ASCII()
+        #checks for invalid actions
         if self.invalid:
             self.invalid = False
             print("invalid action!")
+        #checks for insufficient funds
         if self.insufficient:
             self.insufficient = False
             print("insufficient lines!")
@@ -207,6 +231,7 @@ class shop():
         print("\nLines: {} \n................................\n".format(round(self.lines)))
 
 class library_shop(shop):
+    """inherits shop class. Changes relevant attributes"""
     def __init__(self):
         shop.__init__(self)
         self.image_paths = {'home':"assets/library.txt"}
@@ -218,6 +243,7 @@ class library_shop(shop):
                                     'threading':4}
         
 class project_shop(shop):
+    """inherits shop class. Changes relevant attributes"""
     def __init__(self):
         shop.__init__(self)
         self.image_paths = {'home':"assets/projects.txt"}

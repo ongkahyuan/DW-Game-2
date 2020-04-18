@@ -1,9 +1,25 @@
 import os
-from shops import *
-from player import inventory
+from assets.shops import *
+from assets.player import inventory
 from libdw import sm
 
 class selector(sm.SM):
+    """
+    Class that determines the state of the game. Inherits the state machine class for extra marks. 
+    
+    States
+    ====
+    - intro
+    Display intro to the game
+    - main
+    The main game loop. Runs all the shops.
+    - monitor
+    To do real time monitoring of the number of lines
+    - end
+    Shows the end sreeen and score. 
+    - leave
+    Exits the loop
+    """
     def __init__(self):
         self.start_state = "intro"
         
@@ -32,13 +48,37 @@ class selector(sm.SM):
             elif inp == "back":
                 next_state = "main"
             elif inp == "exit":
-                print("in")
                 next_state = "leave"
         elif state == "leave":
             next_state = state
         return next_state, None
 
 class main():
+    """
+    Class that contains all gamestates. 
+    
+    Methods
+    ====
+    -.load_image(state)
+    Loads ASCII images associated with a given gamestate into memory. Saves them in attribute self.image
+    -.print_ASCII()
+    Prints loaded images to terminal
+    -.display_inventory()
+    Prints inventory items to terminal
+    -.intro/end_screen()
+    Displays intro and end screen
+    -.main_screen()
+    Main game screen. Provides access to shops. 
+    If player enters a shop, it pauses production of lines, sends inventory state to the shop, and calls the shop function. 
+    Upon exit, it takes the updated inventory (post shop modification) and resumes line production.
+    -.monitor_screen()
+    Shows monitor screen by enabling inventory thread printing to terminal.
+    
+    Attributes
+    ====
+    -.invalid
+    Bool. Set to True when an invalid input is given, and set to False after error message is displayed 
+    """
     def __init__(self):
         self.invalid = False
         self.image_paths = {"main":"assets/logo.txt", "intro":"assets/welcome.txt","end":"assets/end.txt", "end_speech": "assets/end_speech.txt"}
@@ -87,34 +127,42 @@ class main():
             return answer
     
     def main_screen(self):
+        """
+        Main screen function. Returns the an input to selector class to update the state machine.
+        """
         clear()
+        if self.invalid:
+            print("Invalid Action!")
+            self.invalid = False
         self.load_image("main")
         self.print_ASCII()
-        if self.invalid:
-            print("Invalid!")
-            self.invalid = False
         self.display_inventory()
         print('- Enter <a> to write code, <library> or <project> to enter the shop.\n- <Monitor> lets you check progress in real-time; <exit> to exit.\n\n>>',end='')
         answer = input().lower()
         if answer == 'a':
-        # if answer == '':
             inventory_obj.add_line()
             return "main"
         elif answer == 'library':
+            #pause the production of lines
             inventory_obj.pause()
+            #send current inventory state to the library object
             lib_obj.update_with_inventory(inventory_obj.lines,inventory_obj.libraries,inventory_obj.projects,round(inventory_obj.multiplier*10))
+            #display library object screen
             lib_obj.display()
+            #Receive updated inventory state after purchases
             inventory_obj.lines, inventory_obj.libraries, nothing= lib_obj.update_inventory()
+            #resume production of lines
             inventory_obj.resume()
             return "main"
         elif answer == 'project':
+            #same as above, but for project object
             inventory_obj.pause()
             pro_obj.update_with_inventory(inventory_obj.lines,inventory_obj.libraries,inventory_obj.projects,round(inventory_obj.multiplier*10))
             pro_obj.display()
             inventory_obj.lines, nothing, inventory_obj.projects= pro_obj.update_inventory()
             inventory_obj.resume()
             return "main"
-        elif answer == "exit" or "back" or "monitor":
+        elif answer == "exit" or answer == "back" or answer == "monitor":
             return answer
         else:
             self.invalid = True
@@ -124,7 +172,6 @@ class main():
     def monitor_screen(self):
         clear()
         inventory_obj.monitor()
-        # print("press enter ")
         answer = input().lower()
         if answer == "":
             inventory_obj.stop_monitor()
@@ -143,21 +190,22 @@ class main():
         if answer == "again" or answer == "back" or answer == "exit":
             return answer
         
-        
+#Initializing objects
 shop_obj = shop()
 lib_obj = library_shop()
 inventory_obj = inventory()
 pro_obj = project_shop()
 state_selector = selector()
+main_obj = main()
 
+#starting threads
 inventory_obj.start()
 state_selector.start()
 
-main_obj = main()
 
 
 while True:
-    # print(state_selector.state)
+    #calling methods based on state
     if state_selector.state == "intro":
         state_selector.step(main_obj.intro_screen())
     elif state_selector.state == "main":
@@ -169,9 +217,8 @@ while True:
     elif state_selector.state == "leave":
         break
     else:
-        break
+        break 
 
-# main_obj.main_screen()    
-
+#ending threads
 inventory_obj.stop()
 
