@@ -29,25 +29,25 @@ class inventory(threading.Thread):
     ====
      
     """
-    def __init__(self, tick_time = 0.1):
+    def __init__(self, tick_time = 0.2):
         """
         Inits the object. tick_time sets the game speed and refresh rate in seconds. Default is 0.1s (10Hz) 
         """
         threading.Thread.__init__(self)
         self.libraries = {}
         self.projects = {}
-        self.lines = 0
+        self.lines = 150
         self.tick_time = tick_time
         self.multiplier = 0
         self.stopped = False
         self.paused = False
         self.verbose = False
-        self.lib_multiplier_dict = {'opencv':0.05,
-                                    'pygame':0.6,
-                                    'threading':4}
-        self.pro_multiplier_dict = {'dw1d':10,
-                                    'pygame game':100,
-                                    'soar project':1000}
+        self.lib_multiplier_dict = {'opencv':0.05*2,
+                                    'pygame':0.6*2,
+                                    'threading':4*2}
+        self.pro_multiplier_dict = {'dw1d':10*2,
+                                    'pygame game':100*2,
+                                    'soar project':1000*2}
         
     def add_line(self):
         self.lines += 1
@@ -82,21 +82,19 @@ class inventory(threading.Thread):
 
     def run(self):
         while not self.stopped:
+            start = time.time()
             if self.verbose:
                 clear()
                 print("Lines: {}".format(round(self.lines)))
-                # print(f.readline())
-                # f.close()
                 print("press enter to exit:\n>>", end = '')
             self.set_multiplier()
             self.lines += 1* self.multiplier
-            # f = open("line_count.txt", "w+")
-            # f.write(str(round(self.lines)))
-            # f.close()
-            time.sleep(self.tick_time)
+            try:
+                time.sleep(self.tick_time-(time.time()-start))
+            except:
+                print("your computer is slow")
+                print(self.tick_time-(time.time()-start))
         self.lines = 0
-        # f = open("line_count.txt", "w+")
-        # f.write(str(round(self.lines)))
-        # f.close()
+
             
             

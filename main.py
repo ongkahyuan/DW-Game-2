@@ -114,7 +114,7 @@ class main():
                 print("  - {}: {}".format(project, number))
         else:
             print("  - None\n")
-        print("\nLine Rate: {} lines/sec".format(round(inventory_obj.multiplier*10,1)))
+        print("\nLine Rate: {} lines/sec".format(round(inventory_obj.multiplier*5,1)))
         print("Lines: {} (on last refresh) \n................................\n".format(round(inventory_obj.lines)))
     
     def intro_screen(self):

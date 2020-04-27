@@ -14,6 +14,7 @@ class shop():
     Generic shop class. Works as a state machine, with main "loop" being .display() (which is actually called recursively)
     Yes, I realise I could have made a base class for both main and shop objects because of the repeated functions. 
     Yes, I could have unified the state machine methods, with both either using this recursive method or the state machine class.
+    Yes, I am aware there there exists a cascade composition of two state machines in sm.SM
     No, I didn't think it was worth the effort for a project of this scale. 
     Yes, I only realised too late that I hadn't implemented sm.SM and did it last minute in main.py 
     
@@ -158,14 +159,14 @@ class shop():
 
             
     def leave_prompt(self):
-        self.illegal_items = ['opencv', 'python']
+        self.illegal_items = ['opencv', 'pygame']
         self.wasted = ['dw1d', 'pygame game']
         #check is any items are bought
         if len(self.items_bought) > 0:
             print("You have purchased: ")
             for index, item in enumerate(self.items_bought):
                 print(str(index+1) + '. ' + str(item))
-            #checks for hypocrisy
+            # checks for hypocrisy
             if any(item in self.items_bought for item in self.illegal_items):
                 print("\nOh, you're using external libraries? After you told us not to? Hmmmmm...\n")
                 print("Type <do as i say and not as i do> to continue:\n\n>>",end='')
